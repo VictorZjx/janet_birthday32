@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Animation</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow-x: hidden;
+            overflow-y: auto;
+            font-family: 'Arial', sans-serif;
+            background-color: #87CEEB; /* Sky blue background */
+        }
+
+        #gameContainer {
+            position: relative;
+            width: 5000px; /* Long width for horizontal scrolling */
+            height: 100vh;
+        }
+
+        /* Basic Character Styling */
+        #character {
+            position: absolute;
+            bottom: 20px;
+            left: 50px;
+            width: 50px;
+            height: 50px;
+            background-color: pink; /* Placeholder for the character */
+            border-radius: 50%;
+            z-index: 100;
+        }
+
+        /* Ground Pattern */
+        #ground {
+            position: absolute;
+            bottom: 0;
+            width: 100%;
+            height: 50px;
+            background: repeating-linear-gradient(
+                -45deg,
+                #8B4513,
+                #8B4513 10px,
+                #A0522D 10px,
+                #A0522D 20px
+            );
+        }
+
+        /* Cloud Styling */
+        .cloud {
+            position: absolute;
+            background: white;
+            border-radius: 50%;
+        }
+
+        /* Cloud 1 */
+        #cloud1 {
+            width: 100px;
+            height: 60px;
+            top: 50px;
+            left: 200px;
+            animation: cloudMove 60s linear infinite;
+        }
+
+        /* Cloud 2 */
+        #cloud2 {
+            width: 150px;
+            height: 80px;
+            top: 100px;
+            left: 400px;
+            animation: cloudMove 80s linear infinite;
+        }
+
+        /* Cloud Movement Animation */
+        @keyframes cloudMove {
+            0% { transform: translateX(0); }
+            100% { transform: translateX(5000px); }
+        }
+
+        /* Tree Styling */
+        .tree {
+            position: absolute;
+            width: 30px;
+            height: 100px;
+            background-color: #8B4513; /* Brown trunk */
+            bottom: 50px;
+        }
+
+        /* Tree Leaves */
+        .tree::before {
+            content: '';
+            position: absolute;
+            width: 100px;
+            height: 100px;
+            background-color: #228B22; /* Green leaves */
+            border-radius: 50%;
+            top: -50px;
+            left: -35px;
+        }
+
+        #tree1 {
+            left: 800px;
+        }
+
+        #tree2 {
+            left: 1500px;
+        }
+
+        #tree3 {
+            left: 3000px;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <div id="character"></div>
+
+        <!-- Clouds -->
+        <div id="cloud1" class="cloud"></div>
+        <div id="cloud2" class="cloud"></div>
+
+        <!-- Trees -->
+        <div id="tree1" class="tree"></div>
+        <div id="tree2" class="tree"></div>
+        <div id="tree3" class="tree"></div>
+
+        <!-- Ground -->
+        <div id="ground"></div>
+    </div>
+
+    <script>
+        const character = document.getElementById('character');
+        const gameContainer = document.getElementById('gameContainer');
+
+        // Set initial scroll position
+        let scrollPosition = 0;
+
+        // Character walk cycle animation (optional)
+        let walkCycle = 0;
+
+        // Scroll event listener
+        window.addEventListener('scroll', function() {
+            // Get the current scroll position
+            scrollPosition = window.scrollY;
+
+            // Update character's position
+            character.style.left = scrollPosition + 50 + 'px';
+
+            // Update the background clouds (parallax effect)
+            document.getElementById('cloud1').style.left = (scrollPosition * 0.5) + 'px';
+            document.getElementById('cloud2').style.left = (scrollPosition * 0.7) + 'px';
+
+            // Update trees' position (slower for parallax)
+            document.getElementById('tree1').style.left = (scrollPosition * 0.8) + 'px';
+            document.getElementById('tree2').style.left = (scrollPosition * 0.85) + 'px';
+            document.getElementById('tree3').style.left = (scrollPosition * 0.9) + 'px';
+
+            // Walk cycle for character (optional for movement effects)
+            walkCycle = (walkCycle + 1) % 4; // Simulate walking motion
+            character.style.transform = `scale(${1 + 0.1 * Math.sin(walkCycle * Math.PI / 2)})`;
+        });
+    </script>
+</body>
+</html>
