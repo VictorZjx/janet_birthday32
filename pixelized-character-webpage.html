@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Super Mario-style Interactive Profile</title>
+    <style>
+        body, html {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Arial', sans-serif;
+        }
+        #gameContainer {
+            width: 100%;
+            height: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        svg {
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+        #emojiContainer {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 300%;
+            height: 100%;
+            pointer-events: none;
+        }
+        .emoji {
+            position: absolute;
+            font-size: 40px;
+            transition: transform 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <div id="gameContainer">
+        <svg viewBox="0 0 100 100" preserveAspectRatio="xMidYMid slice">
+            <defs>
+                <pattern id="groundPattern" patternUnits="userSpaceOnUse" width="20" height="20">
+                    <rect width="20" height="20" fill="#7CFC00"/>
+                    <rect width="10" height="10" fill="#8FBC8F"/>
+                    <rect x="10" y="10" width="10" height="10" fill="#8FBC8F"/>
+                </pattern>
+            </defs>
+            
+            <!-- Sky -->
+            <rect x="-1000" y="0" width="3000" height="70" fill="#87CEEB"/>
+            
+            <!-- Clouds -->
+            <g id="clouds">
+                <path d="M-10,20 Q-5,17 0,20 T10,20 T20,20 Q25,17 30,20" fill="#FFFFFF" opacity="0.8"/>
+                <path d="M50,15 Q55,12 60,15 T70,15 T80,15 Q85,12 90,15" fill="#FFFFFF" opacity="0.9"/>
+                <path d="M100,25 Q105,22 110,25 T120,25 T130,25 Q135,22 140,25" fill="#FFFFFF" opacity="0.8"/>
+                <path d="M160,10 Q165,7 170,10 T180,10 T190,10 Q195,7 200,10" fill="#FFFFFF" opacity="0.9"/>
+            </g>
+            
+            <!-- Trees -->
+            <g id="trees">
+                <g transform="translate(20, 60) scale(0.7)">
+                    <rect x="-2" y="0" width="4" height="10" fill="#8B4513"/>
+                    <polygon points="-8,0 8,0 0,-15" fill="#228B22"/>
+                    <polygon points="-6,-7 6,-7 0,-18" fill="#228B22"/>
+                </g>
+                <g transform="translate(80, 65) scale(0.6)">
+                    <rect x="-2" y="0" width="4" height="8" fill="#8B4513"/>
+                    <circle cx="0" cy="-8" r="7" fill="#228B22"/>
+                </g>
+                <g transform="translate(140, 60) scale(0.7)">
+                    <rect x="-2" y="0" width="4" height="10" fill="#8B4513"/>
+                    <polygon points="-8,0 8,0 0,-15" fill="#228B22"/>
+                    <polygon points="-6,-7 6,-7 0,-18" fill="#228B22"/>
+                </g>
+                <g transform="translate(200, 65) scale(0.6)">
+                    <rect x="-2" y="0" width="4" height="8" fill="#8B4513"/>
+                    <circle cx="0" cy="-8" r="7" fill="#228B22"/>
+                </g>
+            </g>
+            
+            <!-- Ground -->
+            <rect x="-1000" y="70" width="3000" height="30" fill="url(#groundPattern)"/>
+            
+            <!-- Character Group -->
+            <g id="characterGroup" transform="translate(20, 60)">
+                <!-- Main Character -->
+                <g id="character">
+                    <!-- Body -->
+                    <path d="M-5,-10 L-6,-8 L-6,4 L6,4 L6,-8 L5,-10 Z" fill="#FF9AA2"/>
+                    <!-- Dress -->
+                    <path d="M-6,-2 L-8,4 L8,4 L6,-2 Z" fill="#FFB7B2"/>
+                    <!-- Head -->
+                    <rect x="-4" y="-18" width="8" height="8" rx="4" fill="#FFDAC1"/>
+                    <!-- Hair -->
+                    <path d="M-5,-18 L-5,-11 L-3,-11 L-3,-18 M3,-18 L3,-11 L5,-11 L5,-18" fill="#B5838D"/>
+                    <path d="M-5,-19 C-7,-21 -8,-17 -5,-14 M5,-19 C7,-21 8,-17 5,-14" fill="#B5838D"/>
+                    <rect x="-6" y="-19" width="12" height="2" fill="#B5838D"/>
+                    <!-- Hat -->
+                    <path d="M-5,-20 L5,-20 L6,-19 L6,-18 L-6,-18 L-6,-19 Z" fill="#FF69B4"/>
+                    <!-- Face -->
+                    <circle cx="-2" cy="-15" r="0.7" fill="#6D6875"/> <!-- Left eye -->
+                    <circle cx="2" cy="-15" r="0.7" fill="#6D6875"/> <!-- Right eye -->
+                    <path d="M-1.5,-13 Q0,-12 1.5,-13" stroke="#6D6875" fill="none" stroke-width="0.4"/> <!-- Smile -->
+                    <!-- Accessories -->
+                    <circle cx="-4.5" cy="-12" r="0.7" fill="#FFD700"/> <!-- Left earring -->
+                    <circle cx="4.5" cy="-12" r="0.7" fill="#FFD700"/> <!-- Right earring -->
+                    <path d="M-3,-10 Q0,-11.5 3,-10" stroke="#FFD700" fill="none" stroke-width="0.6"/> <!-- Necklace -->
+                    <!-- Arms and Legs -->
+                    <rect id="leftArm" x="-7" y="-8" width="2" height="7" rx="1" fill="#FFDAC1"/>
+                    <rect id="rightArm" x="5" y="-8" width="2" height="7" rx="1" fill="#FFDAC1"/>
+                    <rect id="leftLeg" x="-5" y="4" width="3" height="6" rx="1.5" fill="#FFDAC1"/>
+                    <rect id="rightLeg" x="2" y="4" width="3" height="6" rx="1.5" fill="#FFDAC1"/>
+                </g>
+                
+                <!-- Labubu -->
+                <g id="labubu" transform="translate(8, 2) scale(0.7)">
+                    <ellipse cx="0" cy="1" rx="5" ry="6" fill="#8B4513"/>
+                    <path d="M-4,-1 Q-6,0 -5,2" stroke="#8B4513" stroke-width="1.5" fill="none"/>
+                    <path d="M4,-1 Q6,0 5,2" stroke="#8B4513" stroke-width="1.5" fill="none"/>
+                    <circle cx="0" cy="-5" r="5" fill="#A0522D"/>
+                    <path d="M-3.5,-9 L-5.5,-13 L-1.5,-11 Z" fill="#A0522D"/>
+                    <path d="M3.5,-9 L5.5,-13 L1.5,-11 Z" fill="#A0522D"/>
+                    <circle cx="-2" cy="-6" r="1" fill="#000"/>
+                    <circle cx="2" cy="-6" r="1" fill="#000"/>
+                    <circle cx="-1.7" cy="-6.3" r="0.3" fill="#FFF"/>
+                    <circle cx="2.3" cy="-6.3" r="0.3" fill="#FFF"/>
+                    <path d="M-1.5,-3.5 Q0,-2.5 1.5,-3.5" stroke="#000" fill="none" stroke-width="0.5"/>
+                    <circle cx="-3" cy="-4" r="1" fill="#FF69B4" opacity="0.5"/>
+                    <circle cx="3" cy="-4" r="1" fill="#FF69B4" opacity="0.5"/>
+                    <ellipse cx="0" cy="1" rx="3.5" ry="4.5" fill="#D2691E"/>
+                </g>
+            </g>
+        </svg>
+        <div id="emojiContainer">
+            <div class="emoji" style="left: 10%; top: 30%;">🖊️📄</div>
+            <div class="emoji" style="left: 20%; top: 30%;">🥣</div>
+            <div class="emoji" style="left: 30%; top: 30%;">🧑‍🍳</div>
+            <div class="emoji" style="left: 40%; top: 30%;">🍣</div>
+            <div class="emoji" style="left: 50%; top: 30%;">🧟</div>
+            <div class="emoji" style="left: 60%; top: 30%;">🐱🐶</div>
+            <div class="emoji" style="left: 70%; top: 30%;">💎</div>
+            <div class="emoji" style="left: 80%; top: 30%;">🟢</div>
+        </div>
+    </div>
+
+    <script>
+        const svg = document.querySelector('svg');
+        const characterGroup = document.getElementById('characterGroup');
+        const clouds = document.getElementById('clouds');
+        const trees = document.getElementById('trees');
+        const emojiContainer = document.getElementById('emojiContainer');
+        const leftArm = document.getElementById('leftArm');
+        const rightArm = document.getElementById('rightArm');
+        const leftLeg = document.getElementById('leftLeg');
+        const rightLeg = document.getElementById('rightLeg');
+        const labubu = document.getElementById('labubu');
+        
+        let scrollProgress = 0;
+        const totalScrolls = 30; // Increased to accommodate more content
+        let isWalking = false;
+        let walkCycle = 0;
+
+        function updateScene() {
+            const position = (scrollProgress / totalScrolls) * 200; // Increased range
+            const characterPosition = 20 + position;
+            
+            // Move character
+            characterGroup.setAttribute('transform', `translate(${characterPosition}, 60)`);
+            
+            // Move background elements
+            clouds.setAttribute('transform', `translate(${-position * 0.5}, 0)`);
+            trees.setAttribute('transform', `translate(${-position}, 0)`);
+            emojiContainer.style.transform = `translateX(${-position}px)`;
+            
+            // Update SVG viewBox to create scrolling effect
+            svg.setAttribute('viewBox', `${Math.max(0, characterPosition - 20)} 0 100 100`);
+
+            if (isWalking) {
+                walkCycle = (walkCycle + 1) % 4;
+                switch(walkCycle) {
+                    case 0:
+                        leftArm.setAttribute('transform', 'rotate(20, -6, -8)');
+                        rightArm.setAttribute('transform', 'rotate(-20, 6, -8)');
+                        leftLeg.setAttribute('transform', 'rotate(-20, -3.5, 4)');
+                        rightLeg.setAttribute('transform', 'rotate(20, 3.5, 4)');
+                        labubu.setAttribute('transform', 'translate(8, 2) scale(0.7) rotate(-5)');
+                        break;
+                    case 2:
+                        leftArm.setAttribute('transform', 'rotate(-20, -6, -8)');
+                        rightArm.setAttribute('transform', 'rotate(20, 6, -8)');
+                        leftLeg.setAttribute('transform', 'rotate(20, -3.5, 4)');
+                        rightLeg.setAttribute('transform', 'rotate(-20, 3.5, 4)');
+                        labubu.setAttribute('transform', 'translate(8, 2) scale(0.7) rotate(5)');
+                        break;
+                    default:
+                        leftArm.setAttribute('transform', 'rotate(0, -6, -8)');
+                        rightArm.setAttribute('transform', 'rotate(0, 6, -8)');
+                        leftLeg.setAttribute('transform', 'rotate(0, -3.5, 4)');
+                        rightLeg.setAttribute('transform', 'rotate(0, 3.5, 4)');
+                        labubu.setAttribute('transform', 'translate(8, 2) scale(0.7)');
+                }
+            }
+        }
+
+        window.addEventListener('wheel', (event) => {
+            const oldProgress = scrollProgress;
+            scrollProgress += Math.sign(event.deltaY);
+            scrollProgress = Math.max(0, Math.min(totalScrolls, scrollProgress));
+            
+            if (scrollProgress !== oldProgress) {
+                isWalking = true;
+                updateScene();
+                
+                clearTimeout(window.walkingTimeout);
+                window.walkingTimeout = setTimeout(() => {
+                    isWalking = false;
+                    updateScene();
+                }, 150);
+            }
+        });
+
+        let touchStartX;
+        window.addEventListener('touchstart', (event) => {
+            touchStartX = event.touches[0].clientX;
+        });
+
+        window.addEventListener('touchmove', (event) => {
+            const touchEndX = event.touches[0].clientX;
+            const deltaX = touchEndX - touchStartX;
+            const oldProgress = scrollProgress;
+            scrollProgress -= Math.sign(deltaX) * 0.5;
+            scrollProgress = Math.max(0, Math.min(totalScrolls, scrollProgress));
+            
+            if (scrollProgress !== oldProgress) {
+                isWalking = true;
+                updateScene();
+                touchStartX = touchEndX;
+
+                clearTimeout(window.walkingTimeout);
+                window.walkingTimeout = setTimeout(() => {
+                    isWalking = false;
+                    updateScene();
+                }, 150);
+            }
+        });
+
+        updateScene();
+    </script>
+</body>
+</html>
